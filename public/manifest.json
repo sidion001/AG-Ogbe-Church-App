@@ -1,0 +1,9 @@
+{
+  "name": "AG Ogbe Church",
+  "short_name": "AG Ogbe",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e3a8a",
+  "theme_color": "#1e3a8a",
+  "icons": []
+}
