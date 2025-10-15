@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#1e3a8a"/>
+  <rect x="20" y="20" width="160" height="160" fill="#fbbf24" rx="10"/>
+  <text x="100" y="120" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="#1e3a8a" text-anchor="middle">AG</text>
+  <text x="100" y="160" font-family="Arial, sans-serif" font-size="20" fill="#1e3a8a" text-anchor="middle">OGBE</text>
+</svg>

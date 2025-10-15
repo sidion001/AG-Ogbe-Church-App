@@ -311,24 +311,89 @@ function QuickAction({ icon: Icon, label, color, onClick }) {
 
 function BiblePage() {
   const [selectedBook, setSelectedBook] = useState('');
-  const books = ['Genesis', 'Exodus', 'Matthew', 'Mark', 'Luke', 'John', 'Romans', 'Psalms'];
+  const [selectedChapter, setSelectedChapter] = useState(1);
+  const [verses, setVerses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
+  const books = [
+    'Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy',
+    'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
+    'Matthew', 'Mark', 'Luke', 'John', 'Acts',
+    'Romans', '1 Corinthians', '2 Corinthians', 'Galatians',
+    'Ephesians', 'Philippians', 'Colossians', 'Psalms', 'Proverbs'
+  ];
+
+  const loadChapter = async (book, chapter) => {
+    setLoading(true);
+    try {
+      // Using Bible API
+      const response = await fetch(`https://bible-api.com/${book}+${chapter}`);
+      const data = await response.json();
+      setVerses(data.verses || []);
+    } catch (error) {
+      console.error('Error loading Bible:', error);
+    }
+    setLoading(false);
+  };
 
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-2xl p-6 shadow-lg">
         <h2 className="text-2xl font-bold text-blue-900 mb-4">Holy Bible</h2>
-        <div className="grid grid-cols-2 gap-2">
-          {books.map(book => (
-            <button key={book} onClick={() => setSelectedBook(book)} className="p-3 bg-gray-50 hover:bg-blue-100 rounded-lg font-semibold">
-              {book}
-            </button>
-          ))}
+        
+        <div className="mb-4">
+          <label className="block text-sm font-semibold mb-2">Select Book:</label>
+          <select 
+            value={selectedBook}
+            onChange={(e) => {
+              setSelectedBook(e.target.value);
+              if (e.target.value) loadChapter(e.target.value, selectedChapter);
+            }}
+            className="w-full p-3 border rounded-lg"
+          >
+            <option value="">Choose a book...</option>
+            {books.map(book => (
+              <option key={book} value={book}>{book}</option>
+            ))}
+          </select>
         </div>
+
+        {selectedBook && (
+          <div className="mb-4">
+            <label className="block text-sm font-semibold mb-2">Chapter:</label>
+            <input
+              type="number"
+              value={selectedChapter}
+              onChange={(e) => {
+                setSelectedChapter(e.target.value);
+                loadChapter(selectedBook, e.target.value);
+              }}
+              min="1"
+              className="w-full p-3 border rounded-lg"
+            />
+          </div>
+        )}
+
+        {loading && (
+          <div className="text-center py-8">
+            <Loader className="animate-spin mx-auto mb-2" size={32} />
+            <p>Loading verses...</p>
+          </div>
+        )}
+
+        {!loading && verses.length > 0 && (
+          <div className="bg-gray-50 p-4 rounded-lg space-y-3 max-h-96 overflow-y-auto">
+            {verses.map((verse, idx) => (
+              <p key={idx} className="text-gray-800">
+                <span className="font-bold text-blue-900">{verse.verse}</span> {verse.text}
+              </p>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
 function DevotionalPage({ devotional }) {
   return (
     <div className="space-y-6">
